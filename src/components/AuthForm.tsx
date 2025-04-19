@@ -28,8 +28,7 @@ export const AuthForm = ({ isRegister = false }: Props) => {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
-      router.push("/compare");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      router.push("/matcher");
     } catch (err: any) {
       setError(err.message);
     }

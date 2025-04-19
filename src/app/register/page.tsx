@@ -8,13 +8,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { auth } from "@/lib/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [error, setError] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -24,12 +27,34 @@ export default function RegisterPage() {
     if (password !== confirm) return setError("Passwords do not match.");
     if (password.length < 6)
       return setError("Password must be at least 6 characters.");
+    if (!firstName || !lastName)
+      return setError("First and last name are required.");
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/compare");
-    } catch (error) {
-      setError(error as string);
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const fullName = `${firstName} ${lastName}`;
+
+      let photoURL;
+      if (profileImage) {
+        console.log(
+          "🖼️ Upload image to Firebase Storage later:",
+          profileImage.name
+        );
+        // TODO: Upload to Firebase Storage and get the URL
+      }
+
+      await updateProfile(userCred.user, {
+        displayName: fullName,
+        photoURL: photoURL || undefined,
+      });
+
+      router.push("/matcher");
+    } catch (error: any) {
+      setError(error.message || "Something went wrong.");
     }
   };
 
@@ -42,6 +67,26 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleRegister} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="firstName">First Name</Label>
+              <Input
+                id="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input
+                id="lastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </div>
+
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -72,6 +117,16 @@ export default function RegisterPage() {
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="profileImage">Profile Picture (optional)</Label>
+              <Input
+                id="profileImage"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
               />
             </div>
 
