@@ -127,7 +127,7 @@ export default function MatcherPage() {
       if (!res.ok) throw new Error("Something went wrong.");
       setResult(data);
     } catch {
-      setApiError("Unexpected error occurred.");
+      setApiError("Something went wrong, please try again.");
     } finally {
       setLoadingCompare(false);
     }
