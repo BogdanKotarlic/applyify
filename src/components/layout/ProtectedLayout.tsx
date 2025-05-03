@@ -1,4 +1,9 @@
-import Sidebar from "@/components/layout/Sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components//ui/sidebar";
+import { AppSidebar } from "./AppSidebar";
 
 export default function ProtectedLayout({
   children,
@@ -6,11 +11,24 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className="w-64 shrink-0 border-r">
-        <Sidebar />
-      </div>
-      <main className="flex-1 overflow-y-auto">{children}</main>
-    </div>
+    <SidebarProvider
+      defaultOpen={true}
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar />
+      <SidebarInset>
+        <div className="p-4 max-w-3xl mx-auto w-full">
+          <div className="block sm:hidden mb-4">
+            <SidebarTrigger />
+          </div>
+          {children}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import Spinner from "@/components/ui/spinner";
 
