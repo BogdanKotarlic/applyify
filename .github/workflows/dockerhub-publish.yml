@@ -2,7 +2,7 @@ name: Build & Push to Docker Hub
 
 on:
   push:
-    branches: [ "main", "develop" ]   # main=prod tag, develop=staging tag
+    branches: [ "main", "master", "develop" ]   # main/master=prod tag, develop=staging tag
   workflow_dispatch:
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
           push: true
           # Tag rules:
           # - develop → :staging and :<short sha>
-          # - main    → :latest and :<short sha>
+          # - main/master → :latest and :<short sha>
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/applyify:${{ github.ref_name == 'develop' && 'staging' || 'latest' }}
             ${{ secrets.DOCKERHUB_USERNAME }}/applyify:${{ github.sha }}
