@@ -211,7 +211,7 @@ export default function MatcherPage() {
                   Score: <strong>{result.score}%</strong>
                 </p>
                 <div>
-                  <p className="font-medium">What's Missing:</p>
+                  <p className="font-medium">What is Missing:</p>
                   <ul className="list-disc list-inside text-sm text-muted-foreground">
                     {result.missing.map((item, i) => (
                       <li key={i}>{item}</li>

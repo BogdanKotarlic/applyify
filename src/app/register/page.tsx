@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
@@ -19,6 +19,15 @@ export default function RegisterPage() {
   const [confirm, setConfirm] = useState("");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        router.replace("/matcher");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,8 +62,9 @@ export default function RegisterPage() {
       });
 
       router.push("/matcher");
-    } catch (error: any) {
-      setError(error.message || "Something went wrong.");
+    } catch (error) {
+      console.log(error);
+      setError("Something went wrong.");
     }
   };
 
