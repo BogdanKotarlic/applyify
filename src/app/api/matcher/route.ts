@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-});
-
 export async function POST(req: NextRequest) {
   const { resume, job } = await req.json();
 
   if (!resume || !job) {
     return NextResponse.json({ error: "Missing input" }, { status: 400 });
   }
+
+  // Initialize OpenAI client inside the function to avoid build-time execution
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
 
   const prompt = `
 You're an expert resume evaluator for IT roles.
