@@ -6,6 +6,7 @@ import { auth } from "@/lib/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  AuthError,
 } from "firebase/auth";
 
 interface Props {
@@ -29,8 +30,9 @@ export const AuthForm = ({ isRegister = false }: Props) => {
         await signInWithEmailAndPassword(auth, email, password);
       }
       router.push("/matcher");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const error = err as AuthError;
+      setError(error.message);
     }
   };
 

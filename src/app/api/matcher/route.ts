@@ -50,7 +50,7 @@ ${job}
   try {
     const parsed = JSON.parse(raw);
     return NextResponse.json(parsed);
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to parse GPT response", raw },
       { status: 500 }
